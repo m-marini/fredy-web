@@ -1,0 +1,38 @@
+{
+    "default": {
+        "axiom.level_0.descr": "False (0)",
+        "axiom.level_1.descr": "Quite false (0.25)",
+        "axiom.level_2.descr": "Unknown (0.5)",
+        "axiom.level_3.descr": "Quite true (0.75)",
+        "axiom.level_4.descr": "True (1)",
+        "predicate.title": "Predicate",
+        "predicate.level_0.descr": "False",
+        "predicate.level_1.descr": "Quite false",
+        "predicate.level_2.descr": "Unknown",
+        "predicate.level_3.descr": "Quite true",
+        "predicate.level_4.descr": "True",
+        "axioms.title": "Axioms",
+        "hypothesis.title": "Hypoyhesis",
+        "inferences.title": "Inferences",
+        "axiom.title": "Axiom",
+        "truth.title": "Truth level"
+    },
+    "it": {
+        "axiom.level_0.descr": "Falso (0)",
+        "axiom.level_1.descr": "Abbastanza falso (0.25)",
+        "axiom.level_2.descr": "Non lo so (0.5)",
+        "axiom.level_3.descr": "Abbastanza vero (0.75)",
+        "axiom.level_4.descr": "Vero (1)",
+        "predicate.title": "Predicato",
+        "predicate.level_0.descr": "Falso",
+        "predicate.level_1.descr": "Abbastanza falso",
+        "predicate.level_2.descr": "Non lo so",
+        "predicate.level_3.descr": "Abbastanza vero",
+        "predicate.level_4.descr": "Vero",
+        "axioms.title": "Assiomi",
+        "hypothesis.title": "Ipotesi",
+        "inferences.title": "Inferenze",
+        "axiom.title": "Assioma",
+        "truth.title": "Livello di verità"
+    }
+}
