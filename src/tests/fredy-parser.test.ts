@@ -1,7 +1,7 @@
 import YAML from 'yaml'
 import fs from 'fs';
 import { parseDefs, parseModel, parseNode } from '../modules/fredy-parser';
-import { And, Not, Or, Predicate } from '../modules/fredy-model';
+import { And, Iff, Implies, IsCertain, IsCertainFalse, IsCertainTrue, IsAntinomy, Not, Or, Predicate, Somewhat, Very, Xor, Truth, Falsity, Certainity } from '../modules/fredy-inference-nodes';
 import { default as _ } from 'lodash';
 
 test('Yaml', () => {
@@ -35,6 +35,91 @@ describe('parseModel', () => {
 
         expect(result).toBeInstanceOf(Not);
         const notArg = (result as Not).expression;
+        expect(notArg).toBeInstanceOf(Predicate);
+        expect((notArg as Predicate).id).toEqual('pred');
+    });
+
+    test('parseNode very', () => {
+        const defs = {
+            type: 'very',
+            expression: {
+                type: 'predicate',
+                id: 'pred'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(Very);
+        const notArg = (result as Very).expression;
+        expect(notArg).toBeInstanceOf(Predicate);
+        expect((notArg as Predicate).id).toEqual('pred');
+    });
+
+    test('parseNode somewhat', () => {
+        const defs = {
+            type: 'somewhat',
+            expression: {
+                type: 'predicate',
+                id: 'pred'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(Somewhat);
+        const notArg = (result as Somewhat).expression;
+        expect(notArg).toBeInstanceOf(Predicate);
+        expect((notArg as Predicate).id).toEqual('pred');
+    });
+
+    test('parseNode isCertain', () => {
+        const defs = {
+            type: 'isCertain',
+            expression: {
+                type: 'predicate',
+                id: 'pred'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(IsCertain);
+        const notArg = (result as IsCertain).expression;
+        expect(notArg).toBeInstanceOf(Predicate);
+        expect((notArg as Predicate).id).toEqual('pred');
+    });
+
+    test('parseNode isCertainTrue', () => {
+        const defs = {
+            type: 'isCertainTrue',
+            expression: {
+                type: 'predicate',
+                id: 'pred'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(IsCertainTrue);
+        const notArg = (result as IsCertainTrue).expression;
+        expect(notArg).toBeInstanceOf(Predicate);
+        expect((notArg as Predicate).id).toEqual('pred');
+    });
+
+    test('parseNode isCertainFalse', () => {
+        const defs = {
+            type: 'isCertainFalse',
+            expression: {
+                type: 'predicate',
+                id: 'pred'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(IsCertainFalse);
+        const notArg = (result as IsCertainFalse).expression;
         expect(notArg).toBeInstanceOf(Predicate);
         expect((notArg as Predicate).id).toEqual('pred');
     });
@@ -87,6 +172,175 @@ describe('parseModel', () => {
         expect((args[0] as Predicate).id).toEqual('pred0');
         expect(args[1]).toBeInstanceOf(Predicate);
         expect((args[1] as Predicate).id).toEqual('pred1');
+    });
+
+    test('parseNode xor', () => {
+        const defs = {
+            type: 'xor',
+            expressions: [
+                {
+                    type: 'predicate',
+                    id: 'pred0'
+                }, {
+                    type: 'predicate',
+                    id: 'pred1'
+                }
+            ]
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(Xor);
+        const args = (result as Xor).expressions;
+        expect(args).toHaveLength(2);
+        expect(args[0]).toBeInstanceOf(Predicate);
+        expect((args[0] as Predicate).id).toEqual('pred0');
+        expect(args[1]).toBeInstanceOf(Predicate);
+        expect((args[1] as Predicate).id).toEqual('pred1');
+    });
+
+    test('parseNode implies', () => {
+        const defs = {
+            type: 'implies',
+            antecedent: {
+                type: 'predicate',
+                id: 'pred0'
+            },
+            consequent: {
+                type: 'predicate',
+                id: 'pred1'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(Implies);
+        const left = (result as Implies).antecedent;
+        expect(left).toBeInstanceOf(Predicate);
+        expect((left as Predicate).id).toEqual('pred0');
+        const right = (result as Implies).consequent;
+        expect(right).toBeInstanceOf(Predicate);
+        expect((right as Predicate).id).toEqual('pred1');
+    });
+
+    test('parseNode iff', () => {
+        const defs = {
+            type: 'iff',
+            antecedent: {
+                type: 'predicate',
+                id: 'pred0'
+            },
+            consequent: {
+                type: 'predicate',
+                id: 'pred1'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(Iff);
+        const left = (result as Iff).antecedent;
+        expect(left).toBeInstanceOf(Predicate);
+        expect((left as Predicate).id).toEqual('pred0');
+        const right = (result as Iff).consequent;
+        expect(right).toBeInstanceOf(Predicate);
+        expect((right as Predicate).id).toEqual('pred1');
+    });
+
+    test('parseNode isAntinomy', () => {
+        const defs = {
+            type: 'isAntinomy',
+            assertion: {
+                type: 'predicate',
+                id: 'pred0'
+            },
+            negation: {
+                type: 'predicate',
+                id: 'pred1'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(IsAntinomy);
+        const left = (result as IsAntinomy).assertion;
+        expect(left).toBeInstanceOf(Predicate);
+        expect((left as Predicate).id).toEqual('pred0');
+        const right = (result as IsAntinomy).negation;
+        expect(right).toBeInstanceOf(Predicate);
+        expect((right as Predicate).id).toEqual('pred1');
+    });
+
+    test('parseNode truth', () => {
+        const defs = {
+            type: 'truth',
+            assertion: {
+                type: 'predicate',
+                id: 'pred0'
+            },
+            negation: {
+                type: 'predicate',
+                id: 'pred1'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(Truth);
+        const left = (result as Truth).assertion;
+        expect(left).toBeInstanceOf(Predicate);
+        expect((left as Predicate).id).toEqual('pred0');
+        const right = (result as Truth).negation;
+        expect(right).toBeInstanceOf(Predicate);
+        expect((right as Predicate).id).toEqual('pred1');
+    });
+
+    test('parseNode falsity', () => {
+        const defs = {
+            type: 'falsity',
+            assertion: {
+                type: 'predicate',
+                id: 'pred0'
+            },
+            negation: {
+                type: 'predicate',
+                id: 'pred1'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(Falsity);
+        const left = (result as Falsity).assertion;
+        expect(left).toBeInstanceOf(Predicate);
+        expect((left as Predicate).id).toEqual('pred0');
+        const right = (result as Falsity).negation;
+        expect(right).toBeInstanceOf(Predicate);
+        expect((right as Predicate).id).toEqual('pred1');
+    });
+
+    test('parseNode certainity', () => {
+        const defs = {
+            type: 'certainity',
+            assertion: {
+                type: 'predicate',
+                id: 'pred0'
+            },
+            negation: {
+                type: 'predicate',
+                id: 'pred1'
+            }
+        };
+
+        const result = parseNode(defs, '');
+
+        expect(result).toBeInstanceOf(Certainity);
+        const left = (result as Certainity).assertion;
+        expect(left).toBeInstanceOf(Predicate);
+        expect((left as Predicate).id).toEqual('pred0');
+        const right = (result as Certainity).negation;
+        expect(right).toBeInstanceOf(Predicate);
+        expect((right as Predicate).id).toEqual('pred1');
     });
 
     test('parseModel', () => {

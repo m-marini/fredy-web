@@ -1,8 +1,8 @@
 import YAML from 'yaml'
 import { parseDefs } from '../modules/fredy-parser';
 import fs from 'fs';
-import { And, InferenceNode, Model, Not, Or, Predicate } from "../modules/fredy-model";
-import { argv } from 'process';
+import {InferenceNode, Model } from "../modules/fredy-model";
+import { And, Not, Or, Predicate } from '../modules/fredy-inference-nodes';
 
 describe('model', () => {
     const bExp: InferenceNode = new Not(new Predicate('a'));

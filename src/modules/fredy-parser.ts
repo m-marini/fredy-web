@@ -1,4 +1,5 @@
-import { And, InferenceNode, Model, Not, Or, Predicate } from "./fredy-model";
+import { And, Iff, Implies, IsCertain, IsCertainFalse, IsCertainTrue, IsAntinomy, Not, Or, Predicate, Somewhat, Very, Xor, Truth, Falsity, Certainity } from "./fredy-inference-nodes";
+import { InferenceNode, Model } from "./fredy-model";
 import { default as _ } from 'lodash';
 
 export interface PropertiesMap {
@@ -13,11 +14,32 @@ export interface ModelDef {
     model: Model,
     languages?: LanguagesMap
 }
+
 type Creator = (doc: any, location: string) => InferenceNode;
 
 interface CreatorMap {
     [index: string]: Creator
 }
+
+const CREATE_BY_TYPE: CreatorMap = {
+    predicate: parsePredicate,
+    not: parseNot,
+    and: parseAnd,
+    or: parseOr,
+    xor: parseXor,
+    isCertain: parseIsCertain,
+    isCertainTrue: parseIsCertainTrue,
+    isCertainFalse: parseIsCertainFalse,
+    implies: parseImplies,
+    iff: parseIff,
+    isAntinomy: parseIsAntinomy,
+    truth: parseTruth,
+    falsity: parseFalsity,
+    certainity: parseCertainity,
+    very: parseVery,
+    somewhat: parseSomewhat
+};
+
 /**
  * Returns the attribute by traversing a json document
  * @param doc the document
@@ -89,6 +111,52 @@ function parseNot(doc: object, location: string): Not {
     return new Not(parseNode(doc, location + '.expression'));
 }
 
+
+/**
+ * Returns the very node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseVery(doc: object, location: string): Very {
+    return new Very(parseNode(doc, location + '.expression'));
+}
+
+/**
+ * Returns the somewhat node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseSomewhat(doc: object, location: string): Somewhat {
+    return new Somewhat(parseNode(doc, location + '.expression'));
+}
+
+/**
+ * Returns the isCertain node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseIsCertain(doc: object, location: string): IsCertain {
+    return new IsCertain(parseNode(doc, location + '.expression'));
+}
+
+/**
+ * Returns the isCertainTrue node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseIsCertainTrue(doc: object, location: string): IsCertainTrue {
+    return new IsCertainTrue(parseNode(doc, location + '.expression'));
+}
+
+/**
+ * Returns the isCertainFalse node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseIsCertainFalse(doc: object, location: string): IsCertainFalse {
+    return new IsCertainFalse(parseNode(doc, location + '.expression'));
+}
+
 /**
  * Returns the and node from json document
  * @param doc the doc
@@ -115,12 +183,84 @@ function parseOr(doc: object, location: string): Or {
     return new Or(expressionNodes);
 }
 
-const CREATE_BY_TYPE: CreatorMap = {
-    predicate: parsePredicate,
-    not: parseNot,
-    and: parseAnd,
-    or: parseOr
-};
+/**
+ * Returns the xor node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseXor(doc: object, location: string): Xor {
+    const expressions = getArray(doc, location + '.expressions');
+    const expressionNodes = _.map(expressions as any[], (value, idx) =>
+        parseNode(doc, location + '.expressions[' + idx + ']')
+    );
+    return new Xor(expressionNodes);
+}
+
+/**
+ * Returns the implies node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseImplies(doc: object, location: string): Implies {
+    const antecedent = parseNode(doc, location + '.antecedent');
+    const consequent = parseNode(doc, location + '.consequent');
+    return new Implies(antecedent, consequent);
+}
+
+/**
+ * Returns the implies node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseIff(doc: object, location: string): Iff {
+    const antecedent = parseNode(doc, location + '.antecedent');
+    const consequent = parseNode(doc, location + '.consequent');
+    return new Iff(antecedent, consequent);
+}
+
+/**
+ * Returns the isParadox node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseIsAntinomy(doc: object, location: string): IsAntinomy {
+    const assertion = parseNode(doc, location + '.assertion');
+    const negation = parseNode(doc, location + '.negation');
+    return new IsAntinomy(assertion, negation);
+}
+
+/**
+ * Returns the truth node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseTruth(doc: object, location: string): Truth {
+    const assertion = parseNode(doc, location + '.assertion');
+    const negation = parseNode(doc, location + '.negation');
+    return new Truth(assertion, negation);
+}
+
+/**
+ * Returns the falsity node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseFalsity(doc: object, location: string): Falsity {
+    const assertion = parseNode(doc, location + '.assertion');
+    const negation = parseNode(doc, location + '.negation');
+    return new Falsity(assertion, negation);
+}
+
+/**
+ * Returns the certainity node from json document
+ * @param doc the doc
+ * @param location the location
+ */
+function parseCertainity(doc: object, location: string): Certainity {
+    const assertion = parseNode(doc, location + '.assertion');
+    const negation = parseNode(doc, location + '.negation');
+    return new Certainity(assertion, negation);
+}
 
 /**
  * Returns the model from json document
