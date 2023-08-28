@@ -1,6 +1,9 @@
 import { default as _ } from 'lodash';
 import { PredicateStatus } from '../react/fredyComponents';
 
+export const UNKNOWN_VALUE = 0.5;
+
+
 /**
  * The node of the fuzzy expresion tree
  */
@@ -17,8 +20,6 @@ export interface InferenceNode {
      */
     dependencies(): string[];
 }
-
-const UNKNOWN_VALUE = 0.5;
 
 /**
  * Computes the evidences appling the assertions
@@ -235,172 +236,6 @@ export class Model {
             })
             .orderBy(['to','dh','ct'],['desc', 'desc','desc'])
             .value();
-    }
-}
-
-/**
- * Evaluates the predicate
- */
-export class Predicate implements InferenceNode {
-    private _id: string;
-
-    /**
-     * Creates the predicate node
-     * @param id the predicate identifier
-     */
-    constructor(id: string) {
-        this._id = id;
-    }
-
-    /**
-     * Returns the predicate identifier
-     */
-    get id() { return this._id; }
-
-    /**
-     * Returns the evaluated truth of the predicate
-     * @param model the model
-     * @param evidences  the evidences
-     */
-    evaluate(model: Model, evidences: Map<string, number>): number {
-        const value = evidences.get(this._id);
-        return value !== undefined ? value : model.evaluate(this._id, evidences);
-    }
-
-    /**
-     * Returns the dependencies set
-     */
-    dependencies(): string[] {
-        return [this._id];
-    }
-}
-
-/**
- * Evaluates the negation of the argument expression
- */
-export class Not implements InferenceNode {
-    private _expression: InferenceNode;
-
-    /**
-     * Creates the not node
-     * @param expression the expression
-     */
-    constructor(expression: InferenceNode) {
-        this._expression = expression;
-    }
-
-    /**
-     * Returns the argument expression
-     */
-    get expression() { return this._expression; }
-
-    /**
-     * Returns the negated truth of the expression
-     * @param model the model
-     * @param evidences  the evidences
-     */
-    evaluate(model: Model, evidences: Map<string, number>): number {
-        const a = this._expression.evaluate(model, evidences);
-        return 1 - a;
-    }
-
-    /**
-     * Returns the dependencies set
-     */
-    dependencies(): string[] {
-        return this._expression.dependencies();
-    }
-}
-
-/**
- * Evaluates the intersection value of the expressions
- */
-export class And implements InferenceNode {
-    private _expressions: InferenceNode[];
-
-    /**
-     * Creates the and node
-     * @param expressions the expressions
-     */
-    constructor(expressions: InferenceNode[]) {
-        this._expressions = expressions;
-    }
-
-    /**
-     * Returns the argument expressions
-     */
-    get expressions() { return this._expressions; }
-
-    /**
-     * Returns the intersected truth of the expressions
-     * @param model the model
-     * @param evidences  the evidences
-     */
-    evaluate(model: Model, evidences: Map<string, number>): number {
-        let value = 1;
-        this._expressions.forEach(expression => {
-            const v = expression.evaluate(model, evidences);
-            value = Math.min(value, v);
-        })
-        return value;
-    }
-
-    /**
-     * Returns the dependencies set
-     */
-    dependencies(): string[] {
-        let result: string[] = [];
-        this._expressions.forEach(expression => {
-            const deps = expression.dependencies();
-            result = [...result, ...deps];
-        });
-        return Array.from(new Set(result));
-    }
-}
-
-/**
- * Evaluates the union value of the expressions
- */
-export class Or implements InferenceNode {
-    private _expressions: InferenceNode[];
-
-    /**
-     * Creates the or node
-     * @param expressions the expressions
-     */
-    constructor(expressions: InferenceNode[]) {
-        this._expressions = expressions;
-    }
-
-    /**
-     * Returns the argument expressions
-     */
-    get expressions() { return this._expressions; }
-
-    /**
-     * Returns the union truth of the expressions
-     * @param model the model
-     * @param evidences  the evidences
-     */
-    evaluate(model: Model, evidences: Map<string, number>): number {
-        let value = 0;
-        this._expressions.forEach(expression => {
-            const v = expression.evaluate(model, evidences);
-            value = Math.max(value, v);
-        })
-        return value;
-    }
-
-    /**
-     * Returns the dependencies set
-     */
-    dependencies(): string[] {
-        let result: string[] = [];
-        this._expressions.forEach(expression => {
-            const deps = expression.dependencies();
-            result = [...result, ...deps];
-        });
-        return Array.from(new Set(result));
     }
 }
 

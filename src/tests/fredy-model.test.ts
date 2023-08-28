@@ -1,4 +1,5 @@
-import { And, InferenceNode, Predicate, createAdjacent, createClosure, createDependencies, deepReverseDependencies, extractChildren, extractIntermediates, extractLeaves, extractParents, extractRoots } from "../modules/fredy-model";
+import { And, Predicate } from "../modules/fredy-inference-nodes";
+import { InferenceNode, createAdjacent, createClosure, createDependencies, deepReverseDependencies, extractChildren, extractIntermediates, extractLeaves, extractParents, extractRoots } from "../modules/fredy-model";
 
 test('createDependencies', () => {
     const assertions = new Map<string, InferenceNode>([
