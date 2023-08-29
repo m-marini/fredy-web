@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/fredy-web/static/css/main.073c9b0a.css",
-    "main.js": "/fredy-web/static/js/main.01f29df4.js",
+    "main.js": "/fredy-web/static/js/main.5097e402.js",
     "static/js/529.006df646.chunk.js": "/fredy-web/static/js/529.006df646.chunk.js",
     "index.html": "/fredy-web/index.html",
     "main.073c9b0a.css.map": "/fredy-web/static/css/main.073c9b0a.css.map",
-    "main.01f29df4.js.map": "/fredy-web/static/js/main.01f29df4.js.map",
+    "main.5097e402.js.map": "/fredy-web/static/js/main.5097e402.js.map",
     "529.006df646.chunk.js.map": "/fredy-web/static/js/529.006df646.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.01f29df4.js"
+    "static/js/main.5097e402.js"
   ]
 }
