@@ -1,14 +1,20 @@
 import React, { Component } from "react";
 import { AxiomTable, PredicateStatus, PredicateTable } from "./fredyComponents";
-import { Accordion, Card, Col, Container, Row } from "react-bootstrap";
+import { Accordion, Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Model } from "../modules/fredy-model";
 import { default as _ } from 'lodash';
 
+/**
+ * Fredy application panel properties
+ */
 interface FredyAppPros {
     mapper?: Map<string, string>,
     model: Model
 }
 
+/**
+ * Fredy application panel state
+ */
 interface FredyAppState {
     evidences: Map<string, number>
 }
@@ -71,6 +77,17 @@ export class FredyApp extends Component<FredyAppPros, FredyAppState> {
     }
 
     /**
+     * Reset all axioms
+     */
+    private resetAll() {
+        const { model } = this.props;
+        const evidences = model.infere(model.unknownAxioms());
+        this.setState({
+            evidences
+        });
+    }
+
+    /**
      * Renders the panel
      */
     render() {
@@ -90,6 +107,9 @@ export class FredyApp extends Component<FredyAppPros, FredyAppState> {
                                 <Accordion.Header>{mapper.get('axioms.title') || 'Axioms'}</Accordion.Header>
                                 <Accordion.Body>
                                     <Card>
+                                        <Button variant="secondary" onClick={ev => this.resetAll()}>
+                                            {mapper?.get('resetAllButton.text') || 'Reset all'}
+                                        </Button>
                                         <AxiomTable id="axioms" states={axioms} onChange={axioms => this.handleAxiomsChange(axioms)} mapper={mapper} />
                                     </Card>
                                 </Accordion.Body>

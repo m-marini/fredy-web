@@ -23,12 +23,70 @@ interface PredicateListProps {
     mapper?: Map<string, string>
 }
 
+interface AxiomRowProps extends PredicateProps {
+    mapper?: Map<string, string>,
+    onChange?: (status: PredicateStatus) => void
+}
+
+interface AxiomTableProps {
+    id: string,
+    states: PredicateStatus[],
+    mapper?: Map<string, string>,
+    onChange?: (states: PredicateStatus[]) => void
+}
+
+interface AxiomButtonsProps {
+    id: string,
+    level: number,
+    mapper?: Map<string, string>,
+    onChange?: (status: PredicateStatus) => void;
+};
+
 const VARIANTS = [
     'danger',
     'warning',
     'light',
     'info',
-    'success'];
+    'success'
+];
+
+const LEVEL_DESCR = [
+    'False', 'Quite false', 'Unknown', 'Quite true', 'True'
+];
+
+const BUTTONS_ATTRS = [
+    {
+        checkedVariant: 'success',
+        uncheckedVariant: 'outline-success',
+        descr: 'True (1)',
+        truth: 1,
+        level: 4
+    }, {
+        checkedVariant: 'info',
+        uncheckedVariant: 'outline-info',
+        descr: 'Quite true (0.75)',
+        truth: 0.75,
+        level: 3
+    }, {
+        checkedVariant: 'light',
+        uncheckedVariant: 'outline-secondary',
+        descr: 'Unknown (0.5)',
+        truth: 0.5,
+        level: 2
+    }, {
+        checkedVariant: 'warning',
+        uncheckedVariant: 'outline-warning',
+        descr: 'Quite false (0.25)',
+        truth: 0.25,
+        level: 1
+    }, {
+        checkedVariant: 'danger',
+        uncheckedVariant: 'outline-danger',
+        descr: 'False (0)',
+        truth: 0,
+        level: 0
+    }
+];
 
 /**
  * Returns the predicate states from evidences
@@ -53,7 +111,7 @@ export function createPredicateProps(evidences: PredicateStatus[], mapper: Map<s
  */
 export const PredicateRow: FunctionComponent<PredicateProps> = (params) => {
     const { descr, truth, level, mapper = new Map() } = params;
-    const levelDescr = (mapper.get('predicate.level_' + level + '.descr') || '')
+    const levelDescr = (mapper.get('predicate.level_' + level + '.descr') || LEVEL_DESCR[level])
         + ' ('
         + truth
         + ')';
@@ -105,56 +163,6 @@ export const PredicateTable: FunctionComponent<PredicateListProps> = (params) =>
     );
 }
 
-const BUTTONS_ATTRS = [
-    {
-        checkedVariant: 'success',
-        uncheckedVariant: 'outline-success',
-        truth: 1,
-        level: 4
-    }, {
-        checkedVariant: 'info',
-        uncheckedVariant: 'outline-info',
-        truth: 0.75,
-        level: 3
-    }, {
-        checkedVariant: 'light',
-        uncheckedVariant: 'outline-secondary',
-        truth: 0.5,
-        level: 2
-    }, {
-        checkedVariant: 'warning',
-        uncheckedVariant: 'outline-warning',
-        truth: 0.25,
-        level: 1
-    }, {
-        checkedVariant: 'danger',
-        uncheckedVariant: 'outline-danger',
-        descr: 'False (0)',
-        truth: 0,
-        level: 0
-    }
-];
-
-interface AxiomButtonsProps {
-    id: string,
-    level: number,
-    mapper?: Map<string, string>,
-    onChange?: (status: PredicateStatus) => void;
-};
-
-
-interface AxiomRowProps extends PredicateProps {
-    mapper?: Map<string, string>,
-    onChange?: (status: PredicateStatus) => void
-}
-
-interface AxiomTableProps {
-    id: string,
-    states: PredicateStatus[],
-    mapper?: Map<string, string>,
-    onChange?: (states: PredicateStatus[]) => void
-}
-
 /**
  * Renders the axiom buttons
  */
@@ -183,7 +191,7 @@ export const AxiomButtons: FunctionComponent<AxiomButtonsProps> = (props) => {
                                 }
                             }}
                         >
-                            {mapper.get(descrKey) || ('' + attrs.truth)}
+                            {mapper.get(descrKey) || attrs.descr}
                         </ToggleButton>
                     );
                 })

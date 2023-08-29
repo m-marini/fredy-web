@@ -367,6 +367,8 @@ describe('parseModel', () => {
 
     test('parse no lang', () => {
         const defs = {
+            version: "0.1",
+            id: "test",
             model: {
                 a: {
                     type: 'predicate',
@@ -392,6 +394,8 @@ describe('parseModel', () => {
 
     test('parse empty languages', () => {
         const defs = {
+            version: "0.1",
+            id: "test",
             model: {
                 a: {
                     type: 'predicate',
@@ -419,6 +423,8 @@ describe('parseModel', () => {
 
     test('parse default empty language', () => {
         const defs = {
+            version: "0.1",
+            id: "test",
             model: {
                 a: {
                     type: 'predicate',
@@ -447,6 +453,8 @@ describe('parseModel', () => {
 
     test('parse default language', () => {
         const defs = {
+            version: "0.1",
+            id: "test",
             model: {
                 a: {
                     type: 'predicate',
