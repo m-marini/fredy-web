@@ -11,6 +11,7 @@ export interface LanguagesMap {
 }
 
 export interface ModelDef {
+    id: string,
     model: Model,
     languages?: LanguagesMap
 }
@@ -20,6 +21,8 @@ type Creator = (doc: any, location: string) => InferenceNode;
 interface CreatorMap {
     [index: string]: Creator
 }
+
+const CURRENT_VERSION = '0.1';
 
 const CREATE_BY_TYPE: CreatorMap = {
     predicate: parsePredicate,
@@ -308,12 +311,25 @@ export function parseModel(doc: any, location: string): Model {
 }
 
 /**
+ * Validates the definitions version
+ * @param version the version
+ */
+function validateVersion(version: string) {
+    if (version !== CURRENT_VERSION) {
+        throw new Error('Model version must be ' + CURRENT_VERSION + ' (' + version + ')');
+    }
+}
+
+/**
  * Returns the model and languages definitions from document
  * @param doc the doc
   */
 export function parseDefs(doc: any, locator: string): ModelDef {
     getObject(doc, locator);
+    const version = getString(doc, locator + '.version');
+    validateVersion(version);
+    const id = getString(doc, locator + '.id');
     const model = parseModel(doc, locator + '.model');
     const languages = parseLanguages(doc, locator + '.languages');
-    return { model, languages };
+    return { id, model, languages };
 }

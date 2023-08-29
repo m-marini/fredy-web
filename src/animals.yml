@@ -1,5 +1,6 @@
 ---
 version: "0.1"
+id: animals
 model:
   is-mamal:
     type: or
@@ -126,6 +127,7 @@ model:
         id: is-bird
 languages:
   default:
+    animals: "Guess the animals"
     is-albatross: "The animal is an albatross"
     is-bird: "The animal is a bird"
     is-black-and-white: "The animal is black and white"
@@ -156,6 +158,7 @@ languages:
     suckles: "The animal suckles"
     swims: "The animal swims"
   it:
+    animals: "Indovina l'animale"
     is-albatross: "L'animale è un albatro"
     is-bird: "L'animale è un uccello"
     is-black-and-white: "L'animale è bianco e nero"
